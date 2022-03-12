@@ -52,8 +52,21 @@ import {
   WalletModalProvider,
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui'
+import { useParams } from 'react-router-dom'
+import { NavigationModal } from '../components/modals/NavigationModal'
 
-function GuessWord() {
+interface GuessWordProps {
+  puzzleId: number
+}
+
+function GuessWord({ puzzleId }: GuessWordProps) {
+  let actualPuzzleId
+  let paramPuzzleId = useParams().puzzleId
+  if (paramPuzzleId) {
+    actualPuzzleId = parseInt(paramPuzzleId)
+  } else {
+    actualPuzzleId = puzzleId
+  }
   const prefersDarkMode = window.matchMedia(
     '(prefers-color-scheme: dark)'
   ).matches
@@ -65,6 +78,7 @@ function GuessWord() {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [isSearchPuzzleModalOpen, setIsSearchPuzzleModalOpen] = useState(false)
   const [currentRowClass, setCurrentRowClass] = useState('')
   const [isGameLost, setIsGameLost] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(
@@ -259,12 +273,10 @@ function GuessWord() {
         setIsInfoModalOpen={setIsInfoModalOpen}
         setIsStatsModalOpen={setIsStatsModalOpen}
         setIsSettingsModalOpen={setIsSettingsModalOpen}
+        setIsSearchPuzzleModalOpen={setIsSearchPuzzleModalOpen}
       />
       <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
         <div className="pb-6 grow">
-          <WalletModalProvider>
-            <WalletMultiButton />
-          </WalletModalProvider>
           <Grid
             guesses={guesses}
             currentGuess={currentGuess}
@@ -305,6 +317,10 @@ function GuessWord() {
           handleDarkMode={handleDarkMode}
           isHighContrastMode={isHighContrastMode}
           handleHighContrastMode={handleHighContrastMode}
+        />
+        <NavigationModal
+          isOpen={isSearchPuzzleModalOpen}
+          handleClose={() => setIsSearchPuzzleModalOpen(false)}
         />
         <AlertContainer />
       </div>
