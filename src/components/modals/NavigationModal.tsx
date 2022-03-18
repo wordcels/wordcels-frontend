@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { BATCH_SIZE } from '../../constants/utils'
+import { getLatestPuzzleBatch } from '../../lib/utils'
 import { BaseModal } from './BaseModal'
 
 type NavigationModalProps = {
@@ -11,6 +13,9 @@ export const NavigationModal = ({
   handleClose,
 }: NavigationModalProps) => {
   let navigate = useNavigate()
+
+  const latestBatch = getLatestPuzzleBatch()
+  const latestPuzzle = latestBatch * BATCH_SIZE
 
   const onSubmit = (e: any) => {
     e.preventDefault()
@@ -37,6 +42,12 @@ export const NavigationModal = ({
             GO
           </button>
         </form>
+        <Link
+          to={`/puzzle/${latestPuzzle}`}
+          className="text-decoration-line: underline text-white"
+        >
+          Or, go to the latest puzzle
+        </Link>
       </div>
     </BaseModal>
   )

@@ -4,6 +4,7 @@ import { BATCH_SIZE } from './constants/utils'
 import { GameState } from './lib/localStorage'
 import { getLatestPuzzleBatch } from './lib/utils'
 import GuessWord from './pages/GuessWord'
+import SolvedPuzzles from './pages/SolvedPuzzles'
 
 function App() {
   let latestBatch = getLatestPuzzleBatch()
@@ -11,9 +12,6 @@ function App() {
     latestBatch = 1
   }
 
-  // TODO: Fetch the last visited puzzle for the given pubkey (if signed in) and
-  // route to the latest of the first puzzle of the latest batch and the last
-  // visited puzzle.
   const firstPuzzleOfBatch = (latestBatch - 1) * BATCH_SIZE + 1
   const defaultGameState = new GameState(null, firstPuzzleOfBatch)
   const puzzleId = Math.max(defaultGameState.onLastPuzzle, firstPuzzleOfBatch)
@@ -23,6 +21,7 @@ function App() {
       <WalletConnectionProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/solved-puzzles" element={<SolvedPuzzles />} />
             <Route path="/" element={<GuessWord puzzleId={puzzleId} />} />
             <Route
               path="/puzzle/:puzzleId"

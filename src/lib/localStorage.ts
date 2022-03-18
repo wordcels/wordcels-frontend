@@ -13,14 +13,21 @@ type GameResponses = {
   responses: string[]
 }
 
+type SolvedList = {
+  solvedIds: number[]
+}
+
 export class GameState {
   player: PublicKey | null
   onLastPuzzle: number
+  solvedPuzzles: number[]
 
   constructor(player: PublicKey | null, latestPuzzle: number) {
     this.player = player
     const lastPuzzle = GameState.loadLastPuzzle(player ? player.toBase58() : '')
     this.onLastPuzzle = lastPuzzle ? parseInt(lastPuzzle) : latestPuzzle
+    const solved = GameState.loadSolvedPuzzles(player)
+    this.solvedPuzzles = solved ? solved.solvedIds : []
   }
 
   saveGameState(puzzleId: number, gameState: GameResponses) {
@@ -41,6 +48,31 @@ export class GameState {
   saveLastPuzzle(puzzleId: number) {
     let key = GameState.lastPuzzleKey(this.player ? this.player.toBase58() : '')
     localStorage.setItem(GameState.lastPuzzleKey(key), puzzleId.toString())
+  }
+
+  updateSolvedPuzzles(puzzleId: number) {
+    if (this.solvedPuzzles.includes(puzzleId)) {
+      return
+    }
+    this.solvedPuzzles.push(puzzleId)
+  }
+
+  saveSolvedPuzzles() {
+    const solvedResponses: SolvedList = { solvedIds: this.solvedPuzzles }
+    localStorage.setItem(
+      GameState.solvedPuzzlesKey(this.player),
+      JSON.stringify(solvedResponses)
+    )
+  }
+
+  static loadSolvedPuzzles(key: PublicKey | null) {
+    const solvedPuzzles = localStorage.getItem(GameState.solvedPuzzlesKey(key))
+    return solvedPuzzles ? (JSON.parse(solvedPuzzles) as SolvedList) : null
+  }
+
+  static solvedPuzzlesKey(key: PublicKey | null) {
+    let keyPortion = key ? key.toBase58() : ''
+    return `solvedList_${keyPortion}`
   }
 
   static gameStateKey(key: PublicKey | null, puzzleId: number) {

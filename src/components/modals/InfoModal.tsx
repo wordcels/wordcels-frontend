@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Cell } from '../grid/Cell'
 import { BaseModal } from './BaseModal'
 
@@ -55,6 +56,16 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
       </div>
       <p className="text-sm text-gray-500 dark:text-gray-300">
         The letter U is not in the word in any spot.
+      </p>
+
+      <br />
+      <p className="text-sm text-gray-500 dark:text-gray-300">
+        A batch of 12 puzzles is released every day. The solution to these 12
+        puzzles is the seed phrase for a wallet with access to NFTs for these 12
+        NFTs. Be the first to solve all 12 and claim the NFTs on the{' '}
+        <Link to="/solved-puzzles" className="underline">
+          solved puzzles page!
+        </Link>
       </p>
 
       <p className="mt-6 italic text-sm text-gray-500 dark:text-gray-300">
