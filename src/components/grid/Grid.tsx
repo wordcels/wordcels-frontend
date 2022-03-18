@@ -5,6 +5,7 @@ import { EmptyRow } from './EmptyRow'
 
 type Props = {
   guesses: string[]
+  responses: number[][]
   currentGuess: string
   isRevealing?: boolean
   currentRowClassName: string
@@ -12,6 +13,7 @@ type Props = {
 
 export const Grid = ({
   guesses,
+  responses,
   currentGuess,
   isRevealing,
   currentRowClassName,
@@ -27,6 +29,7 @@ export const Grid = ({
         <CompletedRow
           key={i}
           guess={guess}
+          response={responses[i]}
           isRevealing={isRevealing && guesses.length - 1 === i}
         />
       ))}
